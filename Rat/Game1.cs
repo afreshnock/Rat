@@ -2,6 +2,8 @@
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Rat.Screens;
+using Rat.ThreeD;
+
 namespace Rat
 {
     public class Game1 : Game
@@ -13,16 +15,18 @@ namespace Rat
         private int _screenSelect = 0;
         private KeyboardState _current;
         private KeyboardState _prev;
+        
 
         public Game1()
         {
             _graphics = new GraphicsDeviceManager(this);
+            //_graphics.IsFullScreen = true;
             Content.RootDirectory = "Content";
-            _graphics.PreferredBackBufferHeight = 500;
-            _graphics.PreferredBackBufferWidth = 800;
+            _graphics.PreferredBackBufferHeight = 800;
+            _graphics.PreferredBackBufferWidth = 1000;
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             IsMouseVisible = true;
-            _screenArray = new Screen[]{ new MainMenuScreen(), new GameScreen(), new WinScreen() };
+            _screenArray = new Screen[]{ new MainMenuScreen(this), new GameScreen(this), new WinScreen(this) };
         }
 
         protected override void Initialize()
@@ -35,7 +39,7 @@ namespace Rat
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-
+            
             
             _BMap = Content.Load<BasicTilemap>("ratlevel1");
             _screenArray[0].LoadContent(Content);
@@ -46,8 +50,7 @@ namespace Rat
 
         protected override void Update(GameTime gameTime)
         {
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
-                Exit();
+
 
             // TODO: Add your update logic here
             //_BMap.Update(gameTime);
@@ -107,8 +110,10 @@ namespace Rat
             GraphicsDevice.Clear(Color.DimGray);
 
             // TODO: Add your drawing code here
-            
+
             //_BMap.Draw(gameTime, _spriteBatch);
+            
+
             _screenArray[_screenSelect].Draw(_spriteBatch);
             
             base.Draw(gameTime);

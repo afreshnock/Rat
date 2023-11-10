@@ -15,7 +15,7 @@ namespace Rat
     public class Player : IGameObject
     {
         public Vector2 posistion;
-        public Vector2 velocity;
+        public Vector2 velocity = Vector2.Zero;
         private float maxVelocity = 300;
         private float velocityStep = 5;
         private Texture2D texture;
@@ -24,9 +24,13 @@ namespace Rat
         private float scale;
         int frame=0;
         public BoundingRectangle feet;
-        private bool jumping = false;
+        public bool jumping = false;
         private int jumptime;
         public bool onGround = false;
+        private float jumpTimer = 0;
+        private bool canJump = false;
+        public bool FallThrough = false;
+        private float fallTimer = 0;
 
         SpriteEffects spriteEffect = SpriteEffects.None;
         public Player(Vector2 position, Color color, float scale)
@@ -46,11 +50,16 @@ namespace Rat
         public void Update(GameTime gametime)
         {
             KeyboardState keyboardState = Keyboard.GetState();
+          
             float dt = (float)gametime.ElapsedGameTime.TotalSeconds;
 
-            velocity.Y = 100;
+            velocity.Y += 10;
+            if (velocity.Y > 350)
+            {
+                velocity.Y = 350;
+            }
             //player input
-            if (keyboardState.IsKeyDown(Keys.D))
+            if (keyboardState.IsKeyDown(Keys.D)) //|| gamepad.ThumbSticks.Left.X > .2f)
             {
                 velocity.X = maxVelocity;
                 frame = 1;
@@ -62,16 +71,41 @@ namespace Rat
                 frame = 1;
                 spriteEffect = SpriteEffects.FlipHorizontally;
             }
-            if (keyboardState.IsKeyDown(Keys.Space) && !jumping && onGround)
+            if (keyboardState.IsKeyDown(Keys.S))
+            {
+                FallThrough = true;
+                fallTimer =  .2f;
+            }
+            if(fallTimer > 0)
+            {
+                fallTimer -= (float)gametime.ElapsedGameTime.TotalSeconds;
+
+            }
+            else
+            {
+                FallThrough = false;
+            }
+            if (onGround)
+            {
+                velocity.Y = 0;
+                canJump = true;
+                jumpTimer = 0f;
+            }
+            jumpTimer += (float)gametime.ElapsedGameTime.TotalSeconds;
+            if(jumpTimer > .5f)
+            {
+                canJump = false;
+            }
+            if (keyboardState.IsKeyDown(Keys.Space) && !jumping && canJump)
             {
                 jumping = true;
                 jumptime = 30;
-                onGround = false;
+                canJump = false;
             }
             onGround = false;
             if (jumping)
             {
-                velocity.Y = -200;
+                velocity.Y = -300;
                 jumptime--;
                 if(jumptime <= 0) jumping = false;
             }
@@ -104,7 +138,7 @@ namespace Rat
         public void UpdateBounds()
         {
             bounds = new BoundingRectangle(posistion.X - 32, posistion.Y - 32, 64, 64);
-            feet = new BoundingRectangle(posistion.X, posistion.Y + 28, 1, 4);
+            feet = new BoundingRectangle(posistion.X-28, posistion.Y + 28, 56, 4);
         }
 
         public void Draw(SpriteBatch spriteBatch)

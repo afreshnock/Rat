@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PipelineBuildEvent xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <SourceFile>../../../../../Documents/tilemaps/rattiles/rat3/tilemap.png</SourceFile>
+  <SourceTime>2023-10-30T21:33:30.8193067-05:00</SourceTime>
+  <DestFile>C:/Users/Andy/source/repos/Rat/Rat/Content/bin/Windows/Content/../../../../../Documents/tilemaps/rattiles/rat3/tilemap_0.xnb</DestFile>
+  <DestTime>2023-11-01T19:13:36.8358038-05:00</DestTime>
+  <Importer>TextureImporter</Importer>
+  <ImporterTime>2022-07-26T06:44:56-05:00</ImporterTime>
+  <Processor>TextureProcessor</Processor>
+  <ProcessorTime>2022-07-26T06:44:56-05:00</ProcessorTime>
+  <Dependencies />
+  <BuildAsset />
+  <BuildOutput />
+</PipelineBuildEvent>

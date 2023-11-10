@@ -21,6 +21,8 @@ namespace Rat.Screens
 
         public bool saved = false;
 
+        public WinScreen(Game game) : base(game) { }
+
         public override void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("File");

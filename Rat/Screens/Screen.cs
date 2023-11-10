@@ -11,10 +11,12 @@ namespace Rat.Screens
 {
     public class Screen : IGameObject, IGameComponent
     {
+        protected Game game;
 
-        public Screen()
+        public Screen(Game game)
         {
             _objectList = new List<IGameObject>();
+            this.game = game;
         }
 
         public List<IGameObject> _objectList;
@@ -41,12 +43,12 @@ namespace Rat.Screens
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            //spriteBatch.Begin();
+            spriteBatch.Begin();
             foreach (IGameObject obj in _objectList)
             {
                 obj.Draw(spriteBatch);
             }
-            //spriteBatch.End();
+            spriteBatch.End();
         }
     }
 }

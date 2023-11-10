@@ -14,12 +14,56 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin BottomEntrance.tmx
+/importer:TiledImporter
+/processor:BasicTilemapProcessor
+/build:BottomEntrance.tmx
+
 #begin File.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:File.spritefont
+
+#begin leftenterance.tmx
+/importer:TiledImporter
+/processor:BasicTilemapProcessor
+/build:leftenterance.tmx
+
+#begin monogame-logo.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:monogame-logo.png
+
+#begin rat2.tmx
+/importer:TiledImporter
+/processor:BasicTilemapProcessor
+/build:rat2.tmx
+
+#begin rat3.tmx
+/importer:TiledImporter
+/processor:BasicTilemapProcessor
+/build:rat3.tmx
+
+#begin ratback.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ratback.png
 
 #begin ratlevel1.tmx
 /importer:TiledImporter
@@ -38,6 +82,11 @@
 /processorParam:TextureFormat=Color
 /build:ratsprite.png
 
+#begin rightenterance.tmx
+/importer:TiledImporter
+/processor:BasicTilemapProcessor
+/build:rightenterance.tmx
+
 #begin tilemap.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -49,4 +98,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:tilemap.png
+
+#begin TopEnterance.tmx
+/importer:TiledImporter
+/processor:BasicTilemapProcessor
+/build:TopEnterance.tmx
 
