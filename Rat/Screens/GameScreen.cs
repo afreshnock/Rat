@@ -16,17 +16,17 @@ namespace Rat.Screens
     public class GameScreen : Screen
     {
         private BasicTilemap _currentBmap;
-        private BasicTilemap [,] WorldMap;
+        
         private Player _player;
         private int[] tileIndexArray;
         private SpriteFont _spriteFont;
         private Vector2 _spawnPos = new Vector2(300, 300);
         public bool NextLevel = false;
-        private int WorldmapX = 1;
-        private int WorldmapY = 1;
+        int PizzaCollected = 0;
         Billboard bill;
         FPSCamera camera;
-        
+        Room CurrentRoom;
+        Pizza pizza = new Pizza(Vector2.Zero, 0);
 
         public GameScreen(Game game) : base(game)
         {
@@ -37,34 +37,20 @@ namespace Rat.Screens
             // TODO: Add your initialization logic here
             _player = new Player(_spawnPos, Color.White, 1);
             tileIndexArray = new int[9];
-            WorldMap = new BasicTilemap[10,10];
+            
             base.Initialize();
         }
 
         public override void LoadContent(ContentManager content)
         {
+            CurrentRoom = new Room(RoomManager.AllMaps.ElementAt(0));
+            _currentBmap = CurrentRoom.Map.basicTilemap;
             bill = new Billboard(game);
-            
+            pizza.LoadContent(content);
             _spriteFont = content.Load<SpriteFont>("File");
             _player.LoadContent(content);
-            var middle = content.Load<BasicTilemap>("rat3");
-            var leftEnter = content.Load<BasicTilemap>("leftenterance");
-            var rightEnter = content.Load<BasicTilemap>("rightenterance");
-            var top = content.Load<BasicTilemap>("TopEnterance");
-            var bottom = content.Load<BasicTilemap>("BottomEntrance");
-            // loads basic map
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 10; j++)
-                {
-                    if (i == 0) WorldMap[i, j] = rightEnter;
-                    if (i == 1) WorldMap[i, j] = middle;
-                    if (i == 2) WorldMap[i, j] = leftEnter;
-                }
-            }
-            WorldMap[1, 0] = bottom;
-            WorldMap[1, 2] = top;
-            _currentBmap = WorldMap[WorldmapX, WorldmapY];
+            
+            
             camera = new FPSCamera(game, new Vector3(0, 0, 4));
             base.LoadContent(content);
         }
@@ -85,6 +71,47 @@ namespace Rat.Screens
             _player.Update(gameTime);
             
             TileMapUpdate();
+
+            foreach(IGameObject obj in CurrentRoom.ObjList)
+            {
+                if(obj is Pizza p)
+                {
+                    if (p.Collected == false && _player.bounds.CollidesWith(p.boundingRectangle))
+                    {
+                        if(p.flavor == PizzaFlavor.Stinky)
+                        {
+                            _player.state = RatState.Sick;
+                        }
+                        else if(p.flavor == PizzaFlavor.Sticks)
+                        {
+                            if (_player.state == RatState.Sick) _player.state = RatState.Normal;
+                            else _player.state = RatState.Golden;
+                        }
+                        
+                        p.Collected = true;
+                        PizzaCollected++;
+                        break;
+                    }
+                }
+                
+            }
+            foreach(Door d in CurrentRoom.Doors)
+            {
+                if (_player.bounds.CollidesWith(d.boundingRectangle)) 
+                {
+                    if(d.pos == DoorPosition.Left) _player.posistion.X = (_currentBmap.MapWidth - 1) * _currentBmap.TileWidth; 
+                    else if (d.pos == DoorPosition.Right) _player.posistion.X = 32;
+                    else if (d.pos == DoorPosition.Bottom) _player.posistion.Y = 32;
+                    else if (d.pos == DoorPosition.Top) _player.posistion.Y = (_currentBmap.MapHeight - 1) * _currentBmap.TileHeight;
+                    CurrentRoom = d.Open(CurrentRoom);
+                    _currentBmap = CurrentRoom.Map.basicTilemap;
+                    
+                    break;
+                }
+                
+            }
+
+
             camera.Update(gameTime);
             base.Update(gameTime);
         }
@@ -112,35 +139,8 @@ namespace Rat.Screens
             for (int i = 0; i < tileIndexArray.Length; i++)
             {
                 _player.UpdateBounds();
-                if (_player.posistion.Y < 0)
-                {
-                    WorldmapY--;
-                    _currentBmap = WorldMap[WorldmapX, WorldmapY];
-                    _player.posistion.Y = (_currentBmap.MapHeight - 1) * _currentBmap.TileHeight;
-                    
-                }
-                else if (_player.posistion.Y > _currentBmap.MapHeight * _currentBmap.TileHeight)
-                {
-                    WorldmapY++;
-                    _currentBmap = WorldMap[WorldmapX, WorldmapY];
-                    _player.posistion.Y = 32;
-                   
-                }
-                else if (_player.posistion.X < 0)
-                {
-                    WorldmapX--;
-                    _currentBmap = WorldMap[WorldmapX, WorldmapY];
-                    _player.posistion.X = (_currentBmap.MapWidth - 1) * _currentBmap.TileWidth;
-                    camera.position = new Vector3(2.5f, 0, 4);
-                }
-                else if (_player.posistion.X > _currentBmap.MapWidth * _currentBmap.TileWidth)
-                {
-                    WorldmapX++;
-                    _currentBmap = WorldMap[WorldmapX, WorldmapY];
-                    _player.posistion.X = 32;
-                    camera.position = new Vector3(0, 0, 4);
-                }
-                if (tileIndexArray[i] > -1 && tileIndexArray[i] <= _currentBmap.MapHeight * _currentBmap.MapWidth)
+                
+                if (tileIndexArray[i] > -1 && tileIndexArray[i] < _currentBmap.MapHeight * _currentBmap.MapWidth)
                 {
                     switch (_currentBmap.TileIndices[tileIndexArray[i]])
                     {
@@ -217,25 +217,28 @@ namespace Rat.Screens
 
             float playerX = MathHelper.Clamp(_player.posistion.X, 500, _currentBmap.TileHeight * (_currentBmap.MapWidth-8) );
 
-            float playerY = MathHelper.Clamp(_player.posistion.Y, 200, 680);
+            float playerY = MathHelper.Clamp(_player.posistion.Y, 500, 970);
             
             float offsetX = 500 - playerX;
-            float offsetY = 200- playerY;
+            float offsetY = 500- playerY;
 
             Matrix transform = Matrix.CreateTranslation(offsetX, offsetY, 0);
             bill.Draw(camera);
             spriteBatch.Begin(transformMatrix: transform);
 
             //spriteBatch.Begin();
-            _currentBmap.Draw( spriteBatch);
-          //  spriteBatch.DrawString(_spriteFont, "Press r to reset", new Vector2(700, 1200), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-          //  spriteBatch.DrawString(_spriteFont, "Use A and D to move and SPACE to Jump", _spawnPos * Vector2.One * .9f, Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-          //  spriteBatch.DrawString(_spriteFont, "Enter door for next level", new Vector2(1400,700), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-
+            // _currentBmap.Draw( spriteBatch);
+            //  spriteBatch.DrawString(_spriteFont, "Press r to reset", new Vector2(700, 1200), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            //  spriteBatch.DrawString(_spriteFont, "Use A and D to move and SPACE to Jump", _spawnPos * Vector2.One * .9f, Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            //  spriteBatch.DrawString(_spriteFont, "Enter door for next level", new Vector2(1400,700), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            CurrentRoom.Draw(spriteBatch);
             _player.Draw(spriteBatch);
 
             spriteBatch.End();
-            
+
+            spriteBatch.Begin();
+            spriteBatch.DrawString(_spriteFont, "Pizza Consumed: "+PizzaCollected.ToString() , new Vector2(50, 50), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.End();
 
             
             base.Draw(spriteBatch);

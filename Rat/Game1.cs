@@ -10,7 +10,7 @@ namespace Rat
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private BasicTilemap _BMap;
+        
         private Screen[] _screenArray;
         private int _screenSelect = 0;
         private KeyboardState _current;
@@ -39,12 +39,12 @@ namespace Rat
         protected override void LoadContent()
         {
             _spriteBatch = new SpriteBatch(GraphicsDevice);
-            
-            
-            _BMap = Content.Load<BasicTilemap>("ratlevel1");
+            RoomManager.LoadMaps(Content);
             _screenArray[0].LoadContent(Content);
             _screenArray[1].LoadContent(Content);
             _screenArray[2].LoadContent(Content);
+
+            
             // TODO: use this.Content to load your game content here
         }
 
@@ -53,7 +53,7 @@ namespace Rat
 
 
             // TODO: Add your update logic here
-            //_BMap.Update(gameTime);
+            
             _prev = _current;
             _current = Keyboard.GetState();
 
@@ -110,8 +110,6 @@ namespace Rat
             GraphicsDevice.Clear(Color.DimGray);
 
             // TODO: Add your drawing code here
-
-            //_BMap.Draw(gameTime, _spriteBatch);
             
 
             _screenArray[_screenSelect].Draw(_spriteBatch);

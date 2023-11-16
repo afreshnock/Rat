@@ -23,6 +23,7 @@ namespace Rat
         public Color color;
         private float scale;
         int frame=0;
+        int frameOffset = 0;
         public BoundingRectangle feet;
         public bool jumping = false;
         private int jumptime;
@@ -31,6 +32,9 @@ namespace Rat
         private bool canJump = false;
         public bool FallThrough = false;
         private float fallTimer = 0;
+
+        public RatState state = RatState.Normal;
+        private float goldenTimer = 0;
 
         SpriteEffects spriteEffect = SpriteEffects.None;
         public Player(Vector2 position, Color color, float scale)
@@ -43,8 +47,8 @@ namespace Rat
 
         public void LoadContent(ContentManager content)
         {
-            texture = content.Load<Texture2D>("ratsprite");
-            //debug = content.Load<Texture2D>("sea");
+            texture = content.Load<Texture2D>("ratsprites");
+            
         }
 
         public void Update(GameTime gametime)
@@ -59,6 +63,29 @@ namespace Rat
                 velocity.Y = 350;
             }
             //player input
+            switch (state)
+            {
+                case RatState.Normal:
+                    maxVelocity = 300;
+                    frameOffset = 0;
+                    break;
+                case RatState.Sick:
+                    maxVelocity = 150;
+                    frameOffset = 1;
+                    break;
+                case RatState.Golden:
+                    maxVelocity = 600;
+                    frameOffset = 2;
+                    goldenTimer += (float)gametime.ElapsedGameTime.TotalSeconds;
+                    if (goldenTimer > 15)
+                    {
+                        goldenTimer = 0;
+                        state = RatState.Normal;
+                    }
+                    
+                    break;
+            }
+            
             if (keyboardState.IsKeyDown(Keys.D)) //|| gamepad.ThumbSticks.Left.X > .2f)
             {
                 velocity.X = maxVelocity;
@@ -143,8 +170,15 @@ namespace Rat
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(texture, posistion, new Rectangle(64*frame,0,64,64), color, 0f, Vector2.One * 32 , scale, spriteEffect, 0f);
+            spriteBatch.Draw(texture, posistion, new Rectangle(64*(frame+frameOffset*2),0,64,64), color, 0f, Vector2.One * 32 , scale, spriteEffect, 0f);
 
         }
+    }
+
+    public enum RatState
+    {
+        Normal=0,
+        Sick=1,
+        Golden=2
     }
 }
