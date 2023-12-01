@@ -5,7 +5,7 @@
  </tileset>
  <layer id="1" name="Tile Layer 1" width="30" height="20">
   <data encoding="base64" compression="zlib">
-   eJxjYmBgYBogzEhnPGrvqL3DyV7GUXtH7aWhvaN4FI9iyjAA75MDWw==
+   eJxjYmBgYBogzEgDPGov5XFBjFsHKg0MR3vxuYcYvbT273CzF5v8cPbvQNvLRMBeeudfSvL1ULAXn35a+5cUNw1Ge6mNAagYA48=
   </data>
  </layer>
 </map>

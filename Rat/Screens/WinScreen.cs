@@ -15,9 +15,11 @@ namespace Rat.Screens
     {
         private SpriteFont _font;
 
-        public float yourScore;
+        public float Time;
 
-        public float highScore;
+        public int highScore;
+
+        public int yourScore;
 
         public bool saved = false;
 
@@ -36,7 +38,7 @@ namespace Rat.Screens
             using (StreamReader r = new StreamReader("Highscore.json"))
             {
                 string score = r.ReadToEnd();
-                float items = JsonConvert.DeserializeObject<float>(score);
+                int items = JsonConvert.DeserializeObject<int>(score);
                 highScore = items;
             }
         }
@@ -51,9 +53,10 @@ namespace Rat.Screens
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "You win! (More Levels Coming soon)", new Vector2(800 / 2 - 300, 100), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            spriteBatch.DrawString(_font, "Your Score: " + yourScore.ToString(), new Vector2(800 / 2 - 80, 200), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            spriteBatch.DrawString(_font, "High Score: " + highScore.ToString(), new Vector2(800 / 2 - 70, 300), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "You Starved to Death!", new Vector2(800 / 2 - 300, 100), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "Score: " + yourScore.ToString(), new Vector2(800 / 2 - 80, 200), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "Time: " + Time.ToString(), new Vector2(800 / 2 - 80, 300), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "High Score: " + highScore.ToString(), new Vector2(800 / 2 - 70, 400), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
 
             spriteBatch.End();
             base.Draw(spriteBatch);

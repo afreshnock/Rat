@@ -26,15 +26,34 @@ namespace Rat
         int frameOffset = 0;
         public BoundingRectangle feet;
         public bool jumping = false;
-        private int jumptime;
+        private float jumptime = 0;
         public bool onGround = false;
         private float jumpTimer = 0;
         private bool canJump = false;
         public bool FallThrough = false;
         private float fallTimer = 0;
-
+        private int _hunger = 100;
+        public int Hunger
+        {
+            get
+            {
+                return _hunger;
+            }
+            set
+            {
+                if (value > 100)
+                {
+                    _hunger = 100;
+                }
+                else
+                {
+                    _hunger = value;
+                }
+            }
+        }
+        private float hungerTimer = 0;
         public RatState state = RatState.Normal;
-        private float goldenTimer = 0;
+        public float goldenTimer = 0;
 
         SpriteEffects spriteEffect = SpriteEffects.None;
         public Player(Vector2 position, Color color, float scale)
@@ -57,12 +76,12 @@ namespace Rat
           
             float dt = (float)gametime.ElapsedGameTime.TotalSeconds;
 
-            velocity.Y += 10;
-            if (velocity.Y > 350)
+            velocity.Y += 20;  // gravity
+            if (velocity.Y > 600)
             {
-                velocity.Y = 350;
+                velocity.Y = 600;
             }
-            //player input
+            
             switch (state)
             {
                 case RatState.Normal:
@@ -70,7 +89,7 @@ namespace Rat
                     frameOffset = 0;
                     break;
                 case RatState.Sick:
-                    maxVelocity = 150;
+                    maxVelocity = 300;
                     frameOffset = 1;
                     break;
                 case RatState.Golden:
@@ -85,7 +104,15 @@ namespace Rat
                     
                     break;
             }
-            
+
+            hungerTimer += dt;
+            if(hungerTimer >= 1)
+            {
+                Hunger--;
+                hungerTimer = 0;
+            }
+
+            //player input
             if (keyboardState.IsKeyDown(Keys.D)) //|| gamepad.ThumbSticks.Left.X > .2f)
             {
                 velocity.X = maxVelocity;
@@ -119,21 +146,21 @@ namespace Rat
                 jumpTimer = 0f;
             }
             jumpTimer += (float)gametime.ElapsedGameTime.TotalSeconds;
-            if(jumpTimer > .5f)
+            if(jumpTimer > .2f)
             {
                 canJump = false;
             }
             if (keyboardState.IsKeyDown(Keys.Space) && !jumping && canJump)
             {
                 jumping = true;
-                jumptime = 30;
+                jumptime = .1f;
                 canJump = false;
             }
             onGround = false;
             if (jumping)
             {
-                velocity.Y = -300;
-                jumptime--;
+                velocity.Y = -600;
+                jumptime -= (float)gametime.ElapsedGameTime.TotalSeconds;
                 if(jumptime <= 0) jumping = false;
             }
        

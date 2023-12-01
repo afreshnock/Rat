@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Metadata;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -22,7 +23,7 @@ namespace Rat.Screens
         private SpriteFont _spriteFont;
         private Vector2 _spawnPos = new Vector2(300, 300);
         public bool NextLevel = false;
-        int PizzaCollected = 0;
+        public int PizzaCollected = 0;
         Billboard bill;
         FPSCamera camera;
         Room CurrentRoom;
@@ -59,6 +60,11 @@ namespace Rat.Screens
         public override void Update(GameTime gameTime)
         {
             NextLevel = false;
+            if(_player.Hunger <= 0)
+            {
+                NextLevel = true;
+                return;
+            }
             if (_player.posistion.Y >= _currentBmap.TileHeight * _currentBmap.MapHeight +200) _player.posistion = _spawnPos;
             var keyboardState = Keyboard.GetState();
 
@@ -81,11 +87,24 @@ namespace Rat.Screens
                         if(p.flavor == PizzaFlavor.Stinky)
                         {
                             _player.state = RatState.Sick;
+                            _player.Hunger -= 5;
                         }
                         else if(p.flavor == PizzaFlavor.Sticks)
                         {
-                            if (_player.state == RatState.Sick) _player.state = RatState.Normal;
-                            else _player.state = RatState.Golden;
+                            if (_player.state == RatState.Sick)
+                            {
+                                _player.state = RatState.Normal;
+                            }
+                            else
+                            {
+                                _player.state = RatState.Golden;
+                                _player.goldenTimer = 0;
+                                _player.Hunger += 20;
+                            }
+                        }
+                        else
+                        {
+                            _player.Hunger += 5;
                         }
                         
                         p.Collected = true;
@@ -224,20 +243,16 @@ namespace Rat.Screens
 
             Matrix transform = Matrix.CreateTranslation(offsetX, offsetY, 0);
             bill.Draw(camera);
+
             spriteBatch.Begin(transformMatrix: transform);
 
-            //spriteBatch.Begin();
-            // _currentBmap.Draw( spriteBatch);
-            //  spriteBatch.DrawString(_spriteFont, "Press r to reset", new Vector2(700, 1200), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            //  spriteBatch.DrawString(_spriteFont, "Use A and D to move and SPACE to Jump", _spawnPos * Vector2.One * .9f, Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            //  spriteBatch.DrawString(_spriteFont, "Enter door for next level", new Vector2(1400,700), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
             CurrentRoom.Draw(spriteBatch);
             _player.Draw(spriteBatch);
 
             spriteBatch.End();
 
             spriteBatch.Begin();
-            spriteBatch.DrawString(_spriteFont, "Pizza Consumed: "+PizzaCollected.ToString() , new Vector2(50, 50), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_spriteFont, "Hunger: "+_player.Hunger.ToString() , new Vector2(50, 50), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
             spriteBatch.End();
 
             

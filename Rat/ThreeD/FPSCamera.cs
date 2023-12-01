@@ -45,7 +45,7 @@ namespace Rat.ThreeD
         /// <summary>
         /// The speed of the player while moving 
         /// </summary>
-        public float Speed { get; set; } = 0.005f;
+        public float Speed { get; set; } = 0.0005f;
 
         /// <summary>
         /// Constructs a new FPS Camera

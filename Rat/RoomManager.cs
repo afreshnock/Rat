@@ -32,7 +32,8 @@ namespace Rat
                 new TileDoor(content.Load<BasicTilemap>("leftenterance"),new List<DoorPosition> { DoorPosition.Left }),
                 new TileDoor(content.Load<BasicTilemap>("rightenterance"), new List<DoorPosition>{DoorPosition.Right}),
                 new TileDoor(content.Load<BasicTilemap>("TopEnterance"), new List<DoorPosition>{DoorPosition.Top}),
-                new TileDoor(content.Load<BasicTilemap>("BottomEntrance"), new List<DoorPosition>{DoorPosition.Bottom})
+                new TileDoor(content.Load<BasicTilemap>("BottomEntrance"), new List<DoorPosition>{DoorPosition.Bottom}),
+                new TileDoor(content.Load<BasicTilemap>("LRHallway"), new List<DoorPosition>{DoorPosition.Left,DoorPosition.Right})
             };
         }
 

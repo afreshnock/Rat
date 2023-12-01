@@ -15,6 +15,8 @@ namespace Rat
         private int _screenSelect = 0;
         private KeyboardState _current;
         private KeyboardState _prev;
+        private int score;
+        private float time;
         
 
         public Game1()
@@ -63,7 +65,20 @@ namespace Rat
                 {
                     Exit();
                 }
-                else
+                else if( _screenSelect == 2)
+                {
+                    _screenSelect = 0;
+                    var game = new GameScreen(this);
+                    game.Initialize();
+                    game.LoadContent(Content);
+                    _screenArray[1] = game;
+                    time = 0;
+                    score = 0;
+                    var death = new WinScreen(this);
+                    death.LoadContent(Content);
+                    _screenArray[2] = death;
+                }
+                else 
                 {
                     _screenSelect = 0;
                 }
@@ -82,15 +97,21 @@ namespace Rat
 
             }
             _screenArray[_screenSelect].Update(gameTime);
-            if(_screenArray[_screenSelect] is GameScreen level && level.NextLevel == true)
+            if(_screenArray[_screenSelect] is GameScreen level)
             {
-                _screenSelect++;
+                time +=(float) gameTime.ElapsedGameTime.TotalSeconds;
+                if (level.NextLevel == true)
+                {
+                    _screenSelect++;
+                    score = level.PizzaCollected;
+                }
             }
             if (_screenArray[_screenSelect] is WinScreen win && win.saved == false)
             {
-                
-                win.yourScore = (float)gameTime.TotalGameTime.TotalSeconds;
-                if (win.highScore > win.yourScore)
+
+                win.Time = time;
+                win.yourScore = score;
+                if (win.highScore < win.yourScore)
                 {
                     win.highScore = win.yourScore;
                     win.SaveScore();
