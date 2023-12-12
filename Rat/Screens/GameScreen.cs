@@ -1,8 +1,10 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Rat.Collison;
+using Rat.Particles;
 using Rat.ThreeD;
 using System;
 using System.Collections.Generic;
@@ -28,6 +30,17 @@ namespace Rat.Screens
         FPSCamera camera;
         Room CurrentRoom;
         Pizza pizza = new Pizza(Vector2.Zero, 0);
+        PizzaParticleSystem pizzaParticleSystem;
+        SoundEffect Nom;
+        SoundEffect Death;
+        SoundEffect Crunch;
+        SoundEffect Sick;
+        bool crunchornom= false;
+        float driptime = 0;
+
+        RainParticleSystem drips;
+
+        PixieParticleSystem Pixie;
 
         public GameScreen(Game game) : base(game)
         {
@@ -50,19 +63,43 @@ namespace Rat.Screens
             pizza.LoadContent(content);
             _spriteFont = content.Load<SpriteFont>("File");
             _player.LoadContent(content);
-            
-            
+            Nom = content.Load<SoundEffect>("nom");
+            Death = content.Load<SoundEffect>("death");
+            Crunch = content.Load<SoundEffect>("crunch");
+            Sick = content.Load<SoundEffect>("sick-rat");
+            pizzaParticleSystem = new PizzaParticleSystem(100);
+            pizzaParticleSystem.LoadContent(content);
             camera = new FPSCamera(game, new Vector3(0, 0, 4));
+
+            drips = new RainParticleSystem(50);
+            drips.LoadContent(content);
+            Pixie = new PixieParticleSystem(_player);
+            Pixie.LoadContent(content);
             base.LoadContent(content);
         }
 
 
         public override void Update(GameTime gameTime)
         {
+            pizzaParticleSystem.Update(gameTime);
+            drips.Update(gameTime);
+            Pixie.Update(gameTime);
+            if(_player.state == RatState.Golden)
+            {
+                Pixie.PlacePixie();
+            }
+            driptime += (float)gameTime.ElapsedGameTime.TotalSeconds;
+            if (driptime >= .5)
+            {
+                drips.PlaceDrips(new Rectangle(0, 0, _currentBmap.MapWidth * _currentBmap.TileWidth, 1));
+                driptime = 0;
+            }
+
             NextLevel = false;
             if(_player.Hunger <= 0)
             {
                 NextLevel = true;
+                Death.Play();
                 return;
             }
             if (_player.posistion.Y >= _currentBmap.TileHeight * _currentBmap.MapHeight +200) _player.posistion = _spawnPos;
@@ -88,25 +125,38 @@ namespace Rat.Screens
                         {
                             _player.state = RatState.Sick;
                             _player.Hunger -= 5;
+                            Sick.Play();
                         }
                         else if(p.flavor == PizzaFlavor.Sticks)
                         {
                             if (_player.state == RatState.Sick)
                             {
                                 _player.state = RatState.Normal;
+                                Nom.Play();
                             }
                             else
                             {
                                 _player.state = RatState.Golden;
                                 _player.goldenTimer = 0;
                                 _player.Hunger += 20;
+                                Crunch.Play();
                             }
                         }
                         else
                         {
                             _player.Hunger += 5;
+                            if (crunchornom)
+                            {
+                                Crunch.Play();
+                                crunchornom = false;
+                            }
+                            else
+                            {
+                                Nom.Play();
+                                crunchornom = true;
+                            }
                         }
-                        
+                        pizzaParticleSystem.PlacePizzaParticle(p.boundingRectangle.GetRectangle());
                         p.Collected = true;
                         PizzaCollected++;
                         break;
@@ -234,9 +284,9 @@ namespace Rat.Screens
         public override void Draw(SpriteBatch spriteBatch)
         {
 
-            float playerX = MathHelper.Clamp(_player.posistion.X, 500, _currentBmap.TileHeight * (_currentBmap.MapWidth-8) );
+            float playerX = MathHelper.Clamp(_player.posistion.X, 500, _currentBmap.TileHeight * (_currentBmap.MapWidth-8)+13 );
 
-            float playerY = MathHelper.Clamp(_player.posistion.Y, 500, 970);
+            float playerY = MathHelper.Clamp(_player.posistion.Y, 500, 980);
             
             float offsetX = 500 - playerX;
             float offsetY = 500- playerY;
@@ -245,14 +295,17 @@ namespace Rat.Screens
             bill.Draw(camera);
 
             spriteBatch.Begin(transformMatrix: transform);
-
+            pizzaParticleSystem.Draw(spriteBatch);
+            drips.Draw(spriteBatch);
+            Pixie.Draw(spriteBatch);
             CurrentRoom.Draw(spriteBatch);
+            
             _player.Draw(spriteBatch);
 
             spriteBatch.End();
 
             spriteBatch.Begin();
-            spriteBatch.DrawString(_spriteFont, "Hunger: "+_player.Hunger.ToString() , new Vector2(50, 50), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_spriteFont, "Hunger: "+_player.Hunger.ToString() , new Vector2(50, 50), Color.ForestGreen, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
             spriteBatch.End();
 
             

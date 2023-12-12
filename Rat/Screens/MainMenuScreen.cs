@@ -18,12 +18,16 @@ namespace Rat.Screens
         private SpriteFont _font;
         private float[] scales = new float[] { 1, 1, 1, 1 };
         private bool scaling = true;
+        Texture2D title;
+        Texture2D background;
 
         public MainMenuScreen(Game game) :base(game){ }
 
         public override void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("File");
+            title = content.Load<Texture2D>("ratTitle");
+            background = content.Load<Texture2D>("ratbackground");
             base.LoadContent(content);
         }
 
@@ -53,10 +57,13 @@ namespace Rat.Screens
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "Play Game", new Vector2(800 / 2 - 100, 100), Color.SaddleBrown, 0, Vector2.Zero, scales[0], SpriteEffects.None, 0);
-            spriteBatch.DrawString(_font, "Controls", new Vector2(800 / 2 - 80, 200), Color.SaddleBrown, 0, Vector2.Zero, scales[1], SpriteEffects.None, 0);
-            spriteBatch.DrawString(_font, "Credits", new Vector2(800 / 2 - 70, 300), Color.SaddleBrown, 0, Vector2.Zero, scales[2], SpriteEffects.None, 0);
-            spriteBatch.DrawString(_font, "Exit", new Vector2(800 / 2 - 50, 400), Color.SaddleBrown, 0, Vector2.Zero, scales[3], SpriteEffects.None, 0);
+            spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(title, new Vector2(250, 10), null, Color.White, 0, Vector2.Zero, 1.5f, SpriteEffects.None, 0);
+            
+            spriteBatch.DrawString(_font, "Play Game", new Vector2(800 / 2 - 100, 400), Color.ForestGreen, 0, Vector2.Zero, scales[0], SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "Controls", new Vector2(800 / 2 - 80, 500), Color.ForestGreen, 0, Vector2.Zero, scales[1], SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "Credits", new Vector2(800 / 2 - 70, 600), Color.ForestGreen, 0, Vector2.Zero, scales[2], SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "Exit", new Vector2(800 / 2 - 50, 700), Color.ForestGreen, 0, Vector2.Zero, scales[3], SpriteEffects.None, 0);
             
             spriteBatch.End();
             base.Draw(spriteBatch);

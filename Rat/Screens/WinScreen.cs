@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace Rat.Screens
 {
     public class WinScreen : Screen
@@ -23,11 +24,16 @@ namespace Rat.Screens
 
         public bool saved = false;
 
+        Texture2D background;
+
         public WinScreen(Game game) : base(game) { }
+
+        
 
         public override void LoadContent(ContentManager content)
         {
             _font = content.Load<SpriteFont>("File");
+            background = content.Load<Texture2D>("ratbackground");
             LoadJson();
             base.LoadContent(content);
         }
@@ -53,10 +59,11 @@ namespace Rat.Screens
         public override void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-            spriteBatch.DrawString(_font, "You Starved to Death!", new Vector2(800 / 2 - 300, 100), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            spriteBatch.DrawString(_font, "Score: " + yourScore.ToString(), new Vector2(800 / 2 - 80, 200), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            spriteBatch.DrawString(_font, "Time: " + Time.ToString(), new Vector2(800 / 2 - 80, 300), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
-            spriteBatch.DrawString(_font, "High Score: " + highScore.ToString(), new Vector2(800 / 2 - 70, 400), Color.SaddleBrown, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.Draw(background, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "You Starved to Death!", new Vector2(800 / 2 - 100, 100), Color.ForestGreen, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "Score: " + yourScore.ToString(), new Vector2(800 / 2 - 80, 200), Color.ForestGreen, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "Time: " +Time.ToString("0.0") + " seconds", new Vector2(800 / 2 - 80, 300), Color.ForestGreen, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
+            spriteBatch.DrawString(_font, "High Score: " + highScore.ToString(), new Vector2(800 / 2 - 70, 400), Color.ForestGreen, 0, Vector2.Zero, 1, SpriteEffects.None, 0);
 
             spriteBatch.End();
             base.Draw(spriteBatch);

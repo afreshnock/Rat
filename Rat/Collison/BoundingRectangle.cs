@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
+
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,6 +26,8 @@ namespace Rat.Collison
 
         public float Bottom => Y+Height;
 
+        
+
         public BoundingRectangle(float x ,float y, float width, float height)
         {
             X = x;
@@ -40,6 +42,11 @@ namespace Rat.Collison
             Y = vector2.Y;
             Width = width;
             Height = height;
+        }
+
+        public Rectangle GetRectangle()
+        {
+            return new Rectangle((int)X, (int)Y, (int)Width, (int)Height);
         }
 
         public bool CollidesWith(BoundingRectangle other)

@@ -19,6 +19,48 @@
 /processor:BasicTilemapProcessor
 /build:BottomEntrance.tmx
 
+#begin circle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:circle.png
+
+#begin crunch.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:crunch.wav
+
+#begin death.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:death.wav
+
+#begin dripping-water.mp3
+/importer:Mp3Importer
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:dripping-water.mp3
+
+#begin drop.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:drop.png
+
 #begin File.spritefont
 /importer:FontDescriptionImporter
 /processor:FontDescriptionProcessor
@@ -48,6 +90,12 @@
 /processorParam:TextureFormat=Color
 /build:monogame-logo.png
 
+#begin nom.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:nom.wav
+
 #begin pizza.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -59,6 +107,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:pizza.png
+
+#begin pizzaparticle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:pizzaparticle.png
 
 #begin rat2.tmx
 /importer:TiledImporter
@@ -81,6 +141,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:ratback.png
+
+#begin ratbackground.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ratbackground.png
 
 #begin ratlevel1.tmx
 /importer:TiledImporter
@@ -111,10 +183,28 @@
 /processorParam:TextureFormat=Color
 /build:ratsprites.png
 
+#begin ratTitle.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:ratTitle.png
+
 #begin rightenterance.tmx
 /importer:TiledImporter
 /processor:BasicTilemapProcessor
 /build:rightenterance.tmx
+
+#begin sick-rat.wav
+/importer:WavImporter
+/processor:SoundEffectProcessor
+/processorParam:Quality=Best
+/build:sick-rat.wav
 
 #begin tilemap.png
 /importer:TextureImporter

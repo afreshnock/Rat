@@ -66,11 +66,11 @@ namespace Rat
             }
             else if (door == DoorPosition.Top)
             {
-                return new BoundingRectangle(Map.basicTilemap.TileWidth * 12, -5, Map.basicTilemap.TileWidth * 8,-4);
+                return new BoundingRectangle(Map.basicTilemap.TileWidth * 11, -5, Map.basicTilemap.TileWidth * 10,-4);
             }
             else //if (door == DoorPosition.Bottom)
             {
-                return new BoundingRectangle(Map.basicTilemap.TileWidth * 12, Map.basicTilemap.TileHeight * Map.basicTilemap.MapHeight, Map.basicTilemap.TileWidth * 8, 1);
+                return new BoundingRectangle(Map.basicTilemap.TileWidth * 11, Map.basicTilemap.TileHeight * Map.basicTilemap.MapHeight, Map.basicTilemap.TileWidth * 10, 1);
             }
         }
 

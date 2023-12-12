@@ -1,6 +1,7 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Media;
 using Rat.Screens;
 using Rat.ThreeD;
 
@@ -17,7 +18,8 @@ namespace Rat
         private KeyboardState _prev;
         private int score;
         private float time;
-        
+
+        Song Drips;
 
         public Game1()
         {
@@ -28,7 +30,7 @@ namespace Rat
             _graphics.PreferredBackBufferWidth = 1000;
             _graphics.GraphicsProfile = GraphicsProfile.HiDef;
             IsMouseVisible = true;
-            _screenArray = new Screen[]{ new MainMenuScreen(this), new GameScreen(this), new WinScreen(this) };
+            _screenArray = new Screen[]{ new MainMenuScreen(this), new GameScreen(this), new WinScreen(this), new ControlsScreen(this) , new CreditScreen(this)};
         }
 
         protected override void Initialize()
@@ -45,8 +47,13 @@ namespace Rat
             _screenArray[0].LoadContent(Content);
             _screenArray[1].LoadContent(Content);
             _screenArray[2].LoadContent(Content);
+            _screenArray[3].LoadContent(Content);
+            _screenArray[4].LoadContent(Content);
+            Drips = Content.Load<Song>("dripping-water");
+            MediaPlayer.IsRepeating = true;
+            MediaPlayer.Volume = .25f;
+            MediaPlayer.Play(Drips);
 
-            
             // TODO: use this.Content to load your game content here
         }
 
@@ -88,8 +95,8 @@ namespace Rat
                 switch (s.menuCounter)
                 {
                     case 0: _screenSelect = 1; break;
-                    case 1: _screenSelect = 0; break; // TODO 
-                    case 2: _screenSelect = 0; break; // TODO
+                    case 1: _screenSelect = 3; break; // TODO 
+                    case 2: _screenSelect = 4; break; // TODO
                     case 3: Exit(); break;
                     default: throw new System.Exception();
                 }

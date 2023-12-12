@@ -8,14 +8,25 @@ using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using Rat.Collison;
-
+using Rat.Particles;
 
 namespace Rat
 {
-    public class Player : IGameObject
+    public class Player : IGameObject , IParticleEmitter
     {
         public Vector2 posistion;
         public Vector2 velocity = Vector2.Zero;
+        public Vector2 Position { get
+            {
+                return posistion;
+            } }
+        public Vector2 Velocity
+        {
+            get
+            {
+                return velocity;
+            }
+        }
         private float maxVelocity = 300;
         private float velocityStep = 5;
         private Texture2D texture;
@@ -101,12 +112,11 @@ namespace Rat
                         goldenTimer = 0;
                         state = RatState.Normal;
                     }
-                    
                     break;
             }
 
             hungerTimer += dt;
-            if(hungerTimer >= 1)
+            if(hungerTimer >= .75f)
             {
                 Hunger--;
                 hungerTimer = 0;
@@ -189,6 +199,7 @@ namespace Rat
             
 
         }
+
         public void UpdateBounds()
         {
             bounds = new BoundingRectangle(posistion.X - 32, posistion.Y - 32, 64, 64);
@@ -198,7 +209,6 @@ namespace Rat
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(texture, posistion, new Rectangle(64*(frame+frameOffset*2),0,64,64), color, 0f, Vector2.One * 32 , scale, spriteEffect, 0f);
-
         }
     }
 
